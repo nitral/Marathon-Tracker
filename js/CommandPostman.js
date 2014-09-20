@@ -13,28 +13,22 @@ function CommandPostman(logConsole, commandQueue) {
 }
 
 // Command Postman Object Methods Definition.
-CommandPostman.prototype.sendCommand(command, successCallback, failureCallback) {
+CommandPostman.prototype.sendCommand = function(command, successCallback, failureCallback) {
 	if (window.XMLHttpRequest) {
 		this.xmlhttp = new XMLHttpRequest();
 	} else {
 		this.xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	
-	xmlhttp.onreadystatechange = function() {
-		if (this.xmlhttp.readyState == 4 && this.xmlhttp.status == 200) {
-			successCallback(command);
-		} else if (this.xmlhttp.readyState == 4 && this.xmlhttp.status == 404) {
-			failureCallback(command);
+	this.xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			successCallback.call(commandPostman, command);
+		} else if (this.readyState == 4 && this.status == 404) {
+			failureCallback.call(commandPostman, command);
 		}
 	};
-	
 	this.xmlhttp.open("POST", COMMAND_POSTMAN_URL, true);
 	this.xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	this.xmlhttp.send("cmd=" + JSON.stringify(command));  
-}
-
-CommandPostman.prototype.isLocked = function() {
-	return this.locked;
+	this.xmlhttp.send("cmd=" + JSON.stringify(command));
 }
 
 CommandPostman.prototype.getLastCommand = function() {
@@ -67,10 +61,10 @@ CommandPostman.prototype.manageFailureResponse = function (command) {
 }
 
 CommandPostman.prototype.processQueue = function() {
-	if(!this.isLocked() && !commandQueue.isEmpty()) {
+	if(!this.isLocked && !commandQueue.isEmpty()) {
 		var command = this.commandQueue.peek();
 		this.isLocked = true;
-		this.sendCommand(command, manageSuccessResponse, manageFailureResponse);
+		this.sendCommand(command, this.manageSuccessResponse, this.manageFailureResponse);
 	}
 }
 
@@ -80,13 +74,20 @@ CommandPostman.prototype.pollCommandQueue = function() {
 
 // Command Postman Object Methods - Log Display.
 CommandPostman.prototype.writeSuccessLog = function() {
-	var responseData = JSON.parse(this.lastCommandResponse);
+	var responseData;
+	try {
+		responseData = JSON.parse(this.lastCommandResponse);
+	} catch (e) {
+		this.logConsole.append("Server Error: " + e.message);
+		return ;
+	}
 	
+
 	if(this.lastCommand.type == 2) {
 		// Test writeData and send append string to this.logConsole.append()
-		raceStatus = responseData.raceStatus;
+		localStorage.setItem("raceStatus", responseData.raceStatus);
 		startTime = responseData.startTime;
-		numberOfRacers = responseData.numberOfRacers;
+		localStorage.setItem("numberOfRacers", responseData.numberOfRacers);
 		this.logConsole.append("Ping Successful! Race Status, Start Time and Number of Racers Synced.");
 	} else {
 		if(responseData.status == "0") {

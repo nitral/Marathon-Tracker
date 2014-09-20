@@ -5,3 +5,6 @@
 // Functions to get data from Local Storage Database.
 
 // Printer UI Functions.
+function printLocalStorage() {
+	// Print Local Storage Data.
+}

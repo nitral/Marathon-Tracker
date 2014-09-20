@@ -11,8 +11,9 @@ function LogConsole(terminal) {
 
 // Log Console Object Methods Definition.
 LogConsole.prototype.append = function(message) {
-	this.terminal.innerHTML = this.terminal.innerHTML + message + "<br />";
+	this.terminal.innerHTML = this.terminal.innerHTML + "<li>" + message;
 	this.length++;
+	this.autoScroll();
 }
 
 LogConsole.prototype.clear = function() {
@@ -24,4 +25,8 @@ LogConsole.prototype.clear = function() {
 LogConsole.prototype.specialAlert = function(message) {
 	this.append(message);
 	alert(message);
+}
+
+LogConsole.prototype.autoScroll = function() {
+	this.terminal.scrollTop = this.terminal.scrollHeight;
 }

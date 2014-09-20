@@ -1,0 +1,99 @@
+*
+{
+	margin: 0;
+}
+
+body,html
+{
+	height: 100%;
+	position: relative;
+}
+
+#checkpoint-id-holder
+{
+	display: none;
+}
+
+footer
+{
+	line-height: 30px;
+	text-align: center;
+	height: 4%;
+	background: grey;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+
+#left-wrapper
+{
+	position: relative;
+	left: 0;
+	display: inline-block;
+	background: red;
+	width: 80%;
+	height: 100%;
+}
+
+#right-wrapper
+{
+	border-left: 2px dashed grey;
+	right: 0;
+	height: 100%;
+	position: absolute;
+	display: inline-block;
+	background: blue;
+	width: 20%;
+}
+
+#log-terminal-heading {
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	background: #333;
+	color: white;
+}
+
+#log-terminal {
+	padding-top: 20px;
+	overflow: auto;
+	height: 85%;
+}
+
+section
+{
+	padding: 10px;
+}
+
+#right-wrapper header
+{
+	padding: 10px;
+	text-align: center;
+}
+
+header
+{
+	font-family: arial;
+	font-size: 18px;
+	background: #333;
+	color: white;
+}
+
+#log-terminal h3
+{
+	text-align: center;
+}
+
+#command-line
+{
+	text-align: center;
+	width: 100%;
+	background: green;
+	position: absolute;
+	bottom: 4%;
+}
+
+#command-line *
+{
+	padding: 5px 10px;
+}
