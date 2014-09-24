@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Registration Form</title>
+	<link rel="stylesheet" type="text/css" href="css/stylereg.css">
+</head>
+<body>
+<div class="container">
+	<div id="top" align="center">
+	<h3> MOZATHON 2k14</h3>
+	</div>
+	<div id="middle">
+<form  action="registration.php" method="post"> 
+<h1 align="center">Registration Form</h1>
+<fieldset>
+	<div align="left" class="form">
+	
+	<label for="bibId" class="bibId">Bib ID :</label>
+	<input autofocus class="form-control" name="bibId" type="text" placeholder="Bib ID"/><br><br>
+
+	<label for="name" class="name">Name :</label>		
+	<input autofocus class="form-control" name="name" type="text" placeholder="Name"/><br><br>
+
+	<label for="sex" class="sex">Gender :</label>
+	<input autofocus class="form-control" name="sex" type="radio" placeholder="Male" value="Male"/>Male<input autofocus class="form-control" name="sex" type="radio" placeholder="Female" value="Female"/>Female<br><br>
+	
+	<label for="college" class="college">College Name :</label>
+	<input autofocus class="form-control" name="college" type="text" placeholder="College Name"/><br><br>
+
+	<label for="address" class="address">Address :</label>
+	<input autofocus class="address" name="address" type="text" placeholder="Address"/><br><br>
+	
+	<label for="email" class="email">E-mail :</label>
+	<input autofocus class="form-control" name="email" type="text" placeholder="E-mail"/><br><br>
+	
+	<label for="contact" class="contact">Contact No. :</label>
+	<input autofocus class="form-control" name="contact" type="text" placeholder="Contact No."/><br><br>
+	
+	<label for="dob" class="dob">Date of Birth :</label>
+	<input autofocus class="form-control" name="dob" type="text" placeholder="Date of Birth"/><br><br>
+
+	<label for="econtact" class="contact">Emergency Contact Name :</label>
+	<input autofocus class="form-control" name="econtactname" type="text" placeholder="Emergency Contact Name"/><br><br>
+
+	<label for="econtact" class="contact">Emergency Contact Number :</label>
+	<input autofocus class="form-control" name="econtact" type="text" placeholder="Emergency Contact Number"/><br><br>
+
+	<label for="allergy" class="allergy">Any known allergies :</label>
+	<input type="text-box" name="allergy" placeholder="Allergies" class="allergy"/><br><br>
+
+	<p class="buttons"> 
+           <input type="submit"/>
+           <input type="reset"/>
+    </p>
+    </div>
+
+</fieldset>
+</form>
+
+</body>
+</html>
