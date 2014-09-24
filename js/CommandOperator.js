@@ -118,24 +118,28 @@ function checkRacer(racer) {
 	var currentStatus = localStorage.getItem("racerStatus" + racer);
 	var newStatus = (currentStatus + 1) % 3;
 	localStorage.setItem("racerStatus" + racer, newStatus);
-	localStorage.setItem("racer" + racer + "Lap1Time", lapTime);
+	localStorage.setItem("racer" + racer + "Lap" + newStatus + "Time", lapTime);
 	
 	// Make UI Changes.
+	colorButton(racer);
+	
 	// Append Log on Log Console
 	logConsole.append("Racer ID = " + racer + " Locally Checked!");
 }
 
 function purgeLocalStorage() {
 	startTime = 0;
-	localStorage.setItem("raceStatus", 0);
+	localStorage.setItem("raceStatus", 1);
 	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
 		localStorage.setItem("racerStatus" + i, 0);
 		localStorage.setItem("racer" + i + "Lap1Time", 0);
 		localStorage.setItem("racer" + i + "Lap2Time", 0);
 	}
-	localStorage.setItem("numberOfRacers", 0);
+	//localStorage.setItem("numberOfRacers", 0);
 	
 	// Make UI Changes.
+	redrawButtons();
+	
 	// Append Log on Log Console
 	logConsole.append("Local Storage Purged!");
 }
@@ -150,6 +154,8 @@ function incrementAllRacerStates() {
 		localStorage.setItem("racer" + i + "Lap" + newState + "Time", lapTime);
 	}
 	// Make UI Changes.
+	redrawButtons();
+	
 	// Append Log on Log Console
 	logConsole.append("All Racers' Statuses Incremented Locally!");
 }
@@ -159,6 +165,8 @@ function checkAllRed() {
 		localStorage.setItem("racerStatus" + i, 0);
 	}
 	// Make UI Changes.
+	redrawButtons();
+	
 	// Append Log on Log Console
 	logConsole.append("All Racers' Statuses Forced to Red Locally!");
 }
@@ -171,6 +179,8 @@ function checkAllYellow() {
 		localStorage.setItem("racer" + i + "Lap1Time", lapTime);
 	}
 	// Make UI Changes.
+	redrawButtons();
+	
 	// Append Log on Log Console
 	logConsole.append("All Racers' Statuses Forced to Yellow Locally!");
 }
@@ -183,6 +193,8 @@ function checkAllGreen() {
 		localStorage.setItem("racer" + i + "Lap2Time", lapTime);
 	}
 	// Make UI Changes.
+	redrawButtons();
+	
 	// Append Log on Log Console
 	logConsole.append("All Racers' Statuses Forced to Green Locally!");
 }
@@ -230,23 +242,25 @@ function applySync() {
 	
 	// Apply Runners Data
 	// Loop through all numberOfRacers records in syncData and apply to LocalStorage
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		localStorage.setItem("racerStatus" + i, syncData.runner[i].status);
-		localStorage.setItem("racer" + i + "Lap1Time", syncData.runner[i].lap1Time);
-		localStorage.setItem("racer" + i + "Lap2Time", syncData.runner[i].lap2Time);
+	for(var i = 0; i < localStorage.getItem("numberOfRacers"); i++) {
+		var current = i + 1;
+		localStorage.setItem("racerStatus" + current, syncData.runner[i].status);
+		localStorage.setItem("racer" + current + "Lap1Time", syncData.runner[i].lap1Time);
+		localStorage.setItem("racer" + current + "Lap2Time", syncData.runner[i].lap2Time);
 	}
 	
 	// Append Log on Log Console
 	logConsole.append("Latest Downloaded Sync Data Applied!");
+	
+	// Redraw UI
+	redrawUI();
 }
 
 function syncUp() {
 	// Prepare Data JSON Object
-	var data = {};
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		data[i].status = localStorage.getItem("racerStatus" + i);
-		data[i].lap1Time = localStorage.getItem("racer" + i + "Lap1Time");
-		data[i].lap2Time = localStorage.getItem("racer" + i + "Lap2Time");
+	var data = [];
+	for(var i = 0; i <= localStorage.getItem("numberOfRacers"); i++) {
+		data[i] = {"status" : localStorage.getItem("racerStatus" + i), "lap1Time" : localStorage.getItem("racer" + i + "Lap1Time"), "lap2Time" : localStorage.getItem("racer" + i + "Lap2Time")};
 	}
 	
 	// Parcel and Send

@@ -12,10 +12,16 @@ var commandQueue, logConsole, commandPostman;
 // Event functions definitions.
 window.onload = function() {
 	// Fix Checkpoint ID
-	checkPointId = parseInt(document.getElementById("checkpoint-id-holder").innerHTML);
+	checkpointId = parseInt(document.getElementById("checkpoint-id-holder").innerHTML);
 	
 	// Fix Preliminary Start Time
 	startTime = startDate.getTime();
+
+	// Fix Number of Racers
+	localStorage.setItem("numberOfRacers", document.getElementById("numberOfRacers-holder").innerHTML);
+	
+	// Fix Initial Race Status as 1
+	localStorage.setItem("raceStatus", 1);
 	
 	commandQueue = new CommandQueue();
 	logConsole = new LogConsole(document.getElementById("log-terminal"));
@@ -31,11 +37,14 @@ window.onload = function() {
 	setInterval(pingServer, PING_INTERVAL);
 	
 	pingServer();
+
+	// Set TimeInterval Callback to Draw Time Counter
+	setInterval(drawTimeCounter, 1000);
 	
 	// Event Listeners declarations.
 	// Grid Buttons Click Event
-	for(var i = 0; i < localStorage.getItem("numberOfRacers"); i++) {
-		document.getElementById(i).addEventListener("click", commandOperator);
+	for(var i = 0; i < parseInt(localStorage.getItem("numberOfRacers")); i++) {
+		document.getElementsByClassName("racer-grid-button")[i].addEventListener("click", commandOperator);
 	}
 	
 	// Sync Up Event Listener
@@ -59,4 +68,29 @@ window.onload = function() {
 	
 	// Printer Event Listener
 	document.getElementById("print-button").addEventListener("click", printLocalStorage);
+	
+	// Force Start Button Event Listener
+	document.getElementById("force-start-button").addEventListener("click", startRace);
+	
+	// Back to Checklist Event Listener
+	document.getElementById("back-checklist-button").addEventListener("click", showChecklistView);
+	
+	// Initialize all Local Storage
+	//initLocalStorage();
+	
+	// Draw Everything Once
+	redrawUI();
+}
+
+function startRace() {
+	document.getElementById("start-race-page").style.display = "none";
+	document.getElementById("racers-buttons-grid").style.display = "block";
+	document.getElementById("print-page").style.display = "none";
+}
+
+function initLocalStorage() {
+	localStorage.setItem("raceStatus", 1);
+	
+	// Fix Number of Racers
+	localStorage.setItem("numberOfRacers", document.getElementById("numberOfRacers-holder").innerHTML);
 }

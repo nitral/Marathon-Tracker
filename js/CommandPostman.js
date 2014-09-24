@@ -1,5 +1,5 @@
 // Command Postman
-var COMMAND_POSTMAN_URL = "";
+var COMMAND_POSTMAN_URL = "./php/cmd.php";
 
 // Command Postman Object Declaration.
 	// Include instance of Log Console.
@@ -14,6 +14,7 @@ function CommandPostman(logConsole, commandQueue) {
 
 // Command Postman Object Methods Definition.
 CommandPostman.prototype.sendCommand = function(command, successCallback, failureCallback) {
+	console.log("Command Message = #" + JSON.stringify(command) + "#")
 	if (window.XMLHttpRequest) {
 		this.xmlhttp = new XMLHttpRequest();
 	} else {
@@ -41,10 +42,25 @@ CommandPostman.prototype.getLastCommandResponse = function() {
 
 CommandPostman.prototype.manageSuccessResponse = function(command) {
 	this.lastCommand = command;
-	this.lastCommandResponse = this.xmlhttp.responseText;
-
+	this.lastCommandResponse = this.xmlhttp.responseText.trim();
+	console.log(this.lastCommandResponse);
+	var responseData;
+	try {
+		responseData = JSON.parse(this.lastCommandResponse);
+	} catch (e) {
+		this.logConsole.append("Server Error: " + e.message);
+		console.log("Command Type = " + this.lastCommand.type + " Response = #" + this.lastCommandResponse + "#");
+	}
+	
 	if(command.type == 0) {
 		SYNC_DOWN_DATA = this.lastCommandResponse;
+	} else if (command.type == 2 && responseData != null) {
+		if (responseData.raceStatus == "0" && localStorage.getItem("raceStatus") != "0") {
+			startRace();
+		}
+		localStorage.setItem("raceStatus", responseData.raceStatus);
+		startTime = responseData.startTime;
+		localStorage.setItem("numberOfRacers", responseData.numberOfRacers);
 	}
 		
 	this.pollCommandQueue();
@@ -78,19 +94,13 @@ CommandPostman.prototype.writeSuccessLog = function() {
 	try {
 		responseData = JSON.parse(this.lastCommandResponse);
 	} catch (e) {
-		this.logConsole.append("Server Error: " + e.message);
 		return ;
 	}
 	
-
 	if(this.lastCommand.type == 2) {
-		// Test writeData and send append string to this.logConsole.append()
-		localStorage.setItem("raceStatus", responseData.raceStatus);
-		startTime = responseData.startTime;
-		localStorage.setItem("numberOfRacers", responseData.numberOfRacers);
 		this.logConsole.append("Ping Successful! Race Status, Start Time and Number of Racers Synced.");
 	} else {
-		if(responseData.status == "0") {
+		if(responseData.commandStatus == "0") {
 			// Write Success Append Data using this.logConsole.append()
 			this.logConsole.append("Command Type Code: " + this.lastCommand.type + " Successfully Accepted!" );
 		} else {

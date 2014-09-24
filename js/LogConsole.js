@@ -13,7 +13,7 @@ function LogConsole(terminal) {
 LogConsole.prototype.append = function(message) {
 	this.terminal.innerHTML = this.terminal.innerHTML + "<li>" + message;
 	this.length++;
-	this.autoScroll();
+	this.scroll();
 }
 
 LogConsole.prototype.clear = function() {
@@ -27,6 +27,6 @@ LogConsole.prototype.specialAlert = function(message) {
 	alert(message);
 }
 
-LogConsole.prototype.autoScroll = function() {
+LogConsole.prototype.scroll = function() {
 	this.terminal.scrollTop = this.terminal.scrollHeight;
 }
