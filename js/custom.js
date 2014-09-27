@@ -18,7 +18,7 @@ window.onload = function() {
 	startTime = startDate.getTime();
 
 	// Fix Number of Racers
-	localStorage.setItem("numberOfRacers", document.getElementById("numberOfRacers-holder").innerHTML);
+	localStorage.setItem("numberOfRacers", document.getElementsByClassName("racer-grid-button").length);
 	
 	// Fix Initial Race Status as 1
 	localStorage.setItem("raceStatus", 1);
@@ -43,7 +43,7 @@ window.onload = function() {
 	
 	// Event Listeners declarations.
 	// Grid Buttons Click Event
-	for(var i = 0; i < parseInt(localStorage.getItem("numberOfRacers")); i++) {
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
 		document.getElementsByClassName("racer-grid-button")[i].addEventListener("click", commandOperator);
 	}
 	
@@ -70,27 +70,51 @@ window.onload = function() {
 	document.getElementById("print-button").addEventListener("click", printLocalStorage);
 	
 	// Force Start Button Event Listener
-	document.getElementById("force-start-button").addEventListener("click", startRace);
+	document.getElementById("force-start-button").addEventListener("click", 
+		function() {
+			if(localStorage.getItem("raceStatus") == "0") {
+				continueRace();
+			} else {
+				startRace();
+			}
+		}
+	);
 	
 	// Back to Checklist Event Listener
 	document.getElementById("back-checklist-button").addEventListener("click", showChecklistView);
 	
 	// Initialize all Local Storage
-	//initLocalStorage();
+	// initLocalStorage();
 	
 	// Draw Everything Once
 	redrawUI();
 }
 
 function startRace() {
-	document.getElementById("start-race-page").style.display = "none";
-	document.getElementById("racers-buttons-grid").style.display = "block";
-	document.getElementById("print-page").style.display = "none";
+	initLocalStorage();
+	
+	showChecklistView();
+	
+	// Make UI Changes.
+	redrawButtons();
+	
+	// Append Log on Log Console
+	logConsole.append("The Race has Started!");
 }
 
 function initLocalStorage() {
-	localStorage.setItem("raceStatus", 1);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, 0);
+		localStorage.setItem("racer" + currentRacerId + "Lap1Time", 0);
+		localStorage.setItem("racer" + currentRacerId + "Lap2Time", 0);
+	}
+	localStorage.setItem("raceStatus", 0);
+}
+
+function continueRace() {
+	showChecklistView();
 	
-	// Fix Number of Racers
-	localStorage.setItem("numberOfRacers", document.getElementById("numberOfRacers-holder").innerHTML);
+	// Append Log on Log Console
+	logConsole.append("The Race Continues!");
 }

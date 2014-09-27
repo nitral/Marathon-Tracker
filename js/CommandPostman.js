@@ -57,6 +57,8 @@ CommandPostman.prototype.manageSuccessResponse = function(command) {
 	} else if (command.type == 2 && responseData != null) {
 		if (responseData.raceStatus == "0" && localStorage.getItem("raceStatus") != "0") {
 			startRace();
+		} else if (responseData.raceStatus == "0" && localStorage.getItem("raceStatus") == "0" && onStartPageView()) {
+			continueRace();
 		}
 		localStorage.setItem("raceStatus", responseData.raceStatus);
 		startTime = responseData.startTime;

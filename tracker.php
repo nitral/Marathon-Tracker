@@ -44,7 +44,6 @@ require_once 'php/includes/input_verification.php';
 <body>
 	<!-- <span id="checkpoint-id-holder"><!-- php to echo checkpoint ID after validation here </span> -->
 	<span id="checkpoint-id-holder" class='hidden_data'><?php echo $_SESSION['checkpointId'] ?></span>
-	<span id="numberOfRacers-holder" class='hidden_data'><?php global $butt_count; echo $butt_count;?></span>
 
 	<div id='left-wrapper'>
 		<header>

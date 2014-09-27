@@ -5,8 +5,9 @@
 // User Interface Time Increment.
 
 function initDrawUI() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		colorButton(i);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		colorButton(currentRacerId);
 	}
 }
 
@@ -17,8 +18,9 @@ function redrawUI() {
 }
 
 function redrawButtons() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		colorButton(i);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		colorButton(currentRacerId);
 	}
 }
 
@@ -28,21 +30,38 @@ function colorButton(buttonId) {
 		document.getElementById(buttonId).style.backgroundColor = "red";
 	} else if (racerState == "1") {
 		document.getElementById(buttonId).style.backgroundColor = "yellow";
-	} else {
+	} else if (racerState == "2") {
 		document.getElementById(buttonId).style.backgroundColor = "green";
+	} else {
+		document.getElementById(buttonId).style.backgroundColor = "blue";
 	}
 }
 
 function drawTimeCounter() {
 	var currentDate = new Date();
-	var startDate = new Date(startTime);
+	var startDate = new Date();
+	//startDate.setTime(startTime);
 	
-	document.getElementById("current-time").innerHTML = currentDate.toUTCString();
-	document.getElementById("start-time").innerHTML = startDate.toUTCString();
+	document.getElementById("current-time").innerHTML = currentDate.toLocaleString();
+	document.getElementById("start-time").innerHTML = startDate.toLocaleString();
 }
 
 function showChecklistView() {
 	document.getElementById("start-race-page").style.display = "none";
 	document.getElementById("racers-buttons-grid").style.display = "block";
 	document.getElementById("print-page").style.display = "none";
+}
+
+function showPrintPageView() {
+	document.getElementById("print-page").style.display = "block";
+	document.getElementById("start-race-page").style.display = "none";
+	document.getElementById("racers-buttons-grid").style.display = "none";
+}
+
+function onStartPageView() {
+	if(document.getElementById("start-race-page").style.display != "none") {
+		return true;
+	} else {
+		return false;
+	}
 }

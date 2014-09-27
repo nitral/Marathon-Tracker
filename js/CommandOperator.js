@@ -128,14 +128,13 @@ function checkRacer(racer) {
 }
 
 function purgeLocalStorage() {
-	startTime = 0;
 	localStorage.setItem("raceStatus", 1);
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		localStorage.setItem("racerStatus" + i, 0);
-		localStorage.setItem("racer" + i + "Lap1Time", 0);
-		localStorage.setItem("racer" + i + "Lap2Time", 0);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, 0);
+		localStorage.setItem("racer" + currentRacerId + "Lap1Time", 0);
+		localStorage.setItem("racer" + currentRacerId + "Lap2Time", 0);
 	}
-	//localStorage.setItem("numberOfRacers", 0);
 	
 	// Make UI Changes.
 	redrawButtons();
@@ -145,14 +144,16 @@ function purgeLocalStorage() {
 }
 
 function incrementAllRacerStates() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		var currentState = localStorage.getItem("racerStatus" + i);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		var currentState = localStorage.getItem("racerStatus" + currentRacerId);
 		var newState = (currentState + 1) % 3;
 		var currentDate = new Date();
 		var lapTime = currentDate.getTime();
-		localStorage.setItem("racerStatus" + i, newState);
-		localStorage.setItem("racer" + i + "Lap" + newState + "Time", lapTime);
+		localStorage.setItem("racerStatus" + currentRacerId, newState);
+		localStorage.setItem("racer" + currentRacerId + "Lap" + newState + "Time", lapTime);
 	}
+	
 	// Make UI Changes.
 	redrawButtons();
 	
@@ -161,9 +162,11 @@ function incrementAllRacerStates() {
 }
 
 function checkAllRed() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
-		localStorage.setItem("racerStatus" + i, 0);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, 0);
 	}
+	
 	// Make UI Changes.
 	redrawButtons();
 	
@@ -172,12 +175,14 @@ function checkAllRed() {
 }
 
 function checkAllYellow() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
 		var currentDate = new Date();
 		var lapTime = currentDate.getTime();
-		localStorage.setItem("racerStatus" + i, 1);
-		localStorage.setItem("racer" + i + "Lap1Time", lapTime);
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, 1);
+		localStorage.setItem("racer" + currentRacerId + "Lap1Time", lapTime);
 	}
+	
 	// Make UI Changes.
 	redrawButtons();
 	
@@ -186,12 +191,14 @@ function checkAllYellow() {
 }
 
 function checkAllGreen() {
-	for(var i = 1; i <= localStorage.getItem("numberOfRacers"); i++) {
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
 		var currentDate = new Date();
 		var lapTime = currentDate.getTime();
-		localStorage.setItem("racerStatus" + i, 2);
-		localStorage.setItem("racer" + i + "Lap2Time", lapTime);
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, 2);	
+		localStorage.setItem("racer" + currentRacerId + "Lap2Time", lapTime);
 	}
+	
 	// Make UI Changes.
 	redrawButtons();
 	
@@ -207,7 +214,7 @@ function parcelCommand(type, racer, data) {
 	commandQueue.add(command);
 	
 	// Append Log on Log Console
-	logConsole.append("Command Type ID = " + command.type + " ID = " + currentTime + " Queued!");
+	logConsole.append("Command Type ID = " + command.getType() + " ID = " + command.getCheckpointTime() + " Queued!");
 }
 
 function pingServer() {
@@ -242,11 +249,11 @@ function applySync() {
 	
 	// Apply Runners Data
 	// Loop through all numberOfRacers records in syncData and apply to LocalStorage
-	for(var i = 0; i < localStorage.getItem("numberOfRacers"); i++) {
-		var current = i + 1;
-		localStorage.setItem("racerStatus" + current, syncData.runner[i].status);
-		localStorage.setItem("racer" + current + "Lap1Time", syncData.runner[i].lap1Time);
-		localStorage.setItem("racer" + current + "Lap2Time", syncData.runner[i].lap2Time);
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		localStorage.setItem("racerStatus" + currentRacerId, syncData.runner[i].status);
+		localStorage.setItem("racer" + currentRacerId + "Lap1Time", syncData.runner[i].lap1Time);
+		localStorage.setItem("racer" + currentRacerId + "Lap2Time", syncData.runner[i].lap2Time);
 	}
 	
 	// Append Log on Log Console
@@ -259,8 +266,9 @@ function applySync() {
 function syncUp() {
 	// Prepare Data JSON Object
 	var data = [];
-	for(var i = 0; i <= localStorage.getItem("numberOfRacers"); i++) {
-		data[i] = {"status" : localStorage.getItem("racerStatus" + i), "lap1Time" : localStorage.getItem("racer" + i + "Lap1Time"), "lap2Time" : localStorage.getItem("racer" + i + "Lap2Time")};
+	for(var i = 0; i < document.getElementsByClassName("racer-grid-button").length; i++) {
+		var currentRacerId = document.getElementsByClassName("racer-grid-button")[i].id;
+		data[i] = {"racerId" : currentRacerId, "status" : localStorage.getItem("racerStatus" + currentRacerId), "lap1Time" : localStorage.getItem("racer" + currentRacerId + "Lap1Time"), "lap2Time" : localStorage.getItem("racer" + currentRacerId + "Lap2Time")};
 	}
 	
 	// Parcel and Send
