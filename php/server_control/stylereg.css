@@ -1,0 +1,28 @@
+.allergy{
+	height:50px;
+	width:250px;
+}
+.name{
+	width:200px;
+}
+
+.address{
+	height:40px;
+	width:250px;
+}
+.form{
+	padding-left:400px;
+}
+.container{
+	background-color: beige;
+}
+.footer{
+	position:fixed;
+	bottom: 0px;
+}
+.email{
+	width:250px;
+}
+.college{
+	width:250px;
+}
