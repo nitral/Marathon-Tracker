@@ -31,4 +31,4 @@ I would love to hear how this software benefitted your marathon event.
 
 If you wish to contribute, feel free to **fork** and send me a **pull request**!
 
-In case you find a nasty bug, drop me an **email**.
+In case you find a nasty bug, drop me an **[email](mailto:nilaybinjola@gmail.com)**.
